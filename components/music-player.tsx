@@ -2,14 +2,20 @@
 
 import React, { useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { ListMusic } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { PlayerSongInfo } from "./music-player/PlayerSongInfo";
 import { PlayerControls } from "./music-player/PlayerControls";
 import { PlayerVolume } from "./music-player/PlayerVolume";
 import { PlayerExpanded } from "./music-player/PlayerExpanded";
+import { PlayerPlaylistSide } from "./music-player/PlayerPlaylistSide";
+import { Button } from "@/components/ui/button";
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
 
   // Mock data for demonstration
   const currentSong = {
@@ -22,6 +28,11 @@ const MusicPlayer = () => {
   };
 
   const playlist = [
+    { title: "Shape of You", artist: "Ed Sheeran" },
+    { title: "Blinding Lights", artist: "The Weeknd" },
+    { title: "Flowers", artist: "Miley Cyrus" },
+    { title: "As It Was", artist: "Harry Styles" },
+    { title: "Stay", artist: "The Kid LAROI & Justin Bieber" },
     { title: "Shape of You", artist: "Ed Sheeran" },
     { title: "Blinding Lights", artist: "The Weeknd" },
     { title: "Flowers", artist: "Miley Cyrus" },
@@ -46,9 +57,29 @@ const MusicPlayer = () => {
           onPlayPause={() => setIsPlaying(!isPlaying)}
         />
 
-        {/* Volume & Fullscreen Trigger (Mini) */}
+        {/* Volume & Sidebar Toggle & Fullscreen Trigger (Mini) */}
         <div className="hidden md:flex items-center justify-end gap-3 flex-1 md:w-1/4">
           <PlayerVolume onExpand={() => setIsExpanded(true)} />
+
+          <div className="flex items-center gap-2 border-l pl-3 border-border">
+            <Sheet open={isPlaylistOpen} onOpenChange={setIsPlaylistOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant={isPlaylistOpen ? "secondary" : "ghost"}
+                  size="icon"
+                  className={cn(
+                    "h-8 w-8 transition-colors",
+                    isPlaylistOpen
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <ListMusic className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <PlayerPlaylistSide playlist={playlist} />
+            </Sheet>
+          </div>
 
           <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
             <PlayerExpanded

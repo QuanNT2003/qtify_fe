@@ -12,6 +12,8 @@ interface PlayerPlaylistTabProps {
   playlist: Song[];
 }
 
+import { SongItem } from "./SongItem";
+
 export const PlayerPlaylistTab = ({ playlist }: PlayerPlaylistTabProps) => {
   return (
     <TabsContent
@@ -24,35 +26,13 @@ export const PlayerPlaylistTab = ({ playlist }: PlayerPlaylistTabProps) => {
             Tiếp theo
           </h3>
           {playlist.map((song, i) => (
-            <div
+            <SongItem
               key={i}
-              className={`flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group ${i === 0 ? "bg-muted/30" : ""}`}
-            >
-              <div className="text-sm text-muted-foreground w-4 text-right group-hover:hidden">
-                {i + 1}
-              </div>
-              <div className="hidden group-hover:block text-muted-foreground w-4">
-                <Play className="h-4 w-4 fill-current" />
-              </div>
-              <div className="h-10 w-10 rounded bg-muted overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                  <Music2 className="h-5 w-5 text-primary" />
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p
-                  className={`font-medium truncate ${i === 0 ? "text-primary" : ""}`}
-                >
-                  {song.title}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {song.artist}
-                </p>
-              </div>
-              <div className="text-xs text-muted-foreground font-mono">
-                3:45
-              </div>
-            </div>
+              song={song}
+              isActive={i === 0}
+              index={i}
+              variant="tab"
+            />
           ))}
         </div>
       </ScrollArea>
