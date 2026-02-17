@@ -5,13 +5,15 @@ import {
   Home,
   Compass,
   Library,
-  PlusCircle,
+  ChartNoAxesCombined,
   Heart,
   Music2,
   Mic2,
   ListMusic,
   User,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -33,12 +35,16 @@ const data = {
       title: "Home",
       url: "/",
       icon: Home,
-      isActive: true,
     },
     {
       title: "Explore",
       url: "/explore",
       icon: Compass,
+    },
+    {
+      title: "Trend",
+      url: "/trend",
+      icon: ChartNoAxesCombined,
     },
     {
       title: "Radio",
@@ -63,26 +69,11 @@ const data = {
       icon: Heart,
     },
   ],
-  playlists: [
-    {
-      title: "My Playlist #1",
-      url: "/playlist/1",
-      icon: Music2,
-    },
-    {
-      title: "Chill Vibes",
-      url: "/playlist/2",
-      icon: Music2,
-    },
-    {
-      title: "Workout Mix",
-      url: "/playlist/3",
-      icon: Music2,
-    },
-  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+
   return (
     <Sidebar
       collapsible="icon"
@@ -111,12 +102,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
-                  isActive={item.isActive}
+                  isActive={pathname === item.url}
                 >
-                  <a href={item.url}>
+                  <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -129,11 +120,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               {data.library.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={item.title}
+                    isActive={pathname === item.url}
+                  >
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -141,26 +136,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarSeparator />
-        <SidebarGroup>
-          <div className="flex items-center justify-between px-2 py-2">
-            <SidebarGroupLabel className="px-0">Playlists</SidebarGroupLabel>
-            <PlusCircle className="size-4 cursor-pointer hover:text-primary transition-colors" />
-          </div>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {data.playlists.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span className="truncate">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
