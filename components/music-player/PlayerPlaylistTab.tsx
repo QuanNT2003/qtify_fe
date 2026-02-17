@@ -1,5 +1,4 @@
 import React from "react";
-import { Play, Music2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TabsContent } from "@/components/ui/tabs";
 

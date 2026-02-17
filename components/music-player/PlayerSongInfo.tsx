@@ -1,5 +1,6 @@
 import React from "react";
 import { Maximize2 } from "lucide-react";
+import Image from "next/image";
 
 interface PlayerSongInfoProps {
   title: string;
@@ -20,9 +21,11 @@ export const PlayerSongInfo = ({
         className="relative h-12 w-12 shrink-0 rounded-md overflow-hidden bg-muted group cursor-pointer"
         onClick={onExpand}
       >
-        <img
+        <Image
           src={cover}
           alt={title}
+          width={48}
+          height={48}
           className="h-full w-full object-cover transition-transform group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">

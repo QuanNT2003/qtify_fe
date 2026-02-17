@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Play, MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 
 const albums = [
   {
@@ -55,9 +56,10 @@ export default function Home() {
               className="group relative space-y-3 overflow-hidden rounded-md border border-border/50 bg-card p-3 transition-colors hover:bg-accent/50"
             >
               <div className="relative aspect-square overflow-hidden rounded-md">
-                <img
+                <Image
                   src={album.cover}
                   alt={album.title}
+                  fill
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">

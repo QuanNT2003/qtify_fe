@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Music2,
-  Play,
-  History,
-  MoreHorizontal,
-  AlarmClock,
-} from "lucide-react";
+import { History, MoreHorizontal, AlarmClock } from "lucide-react";
 import { SheetContent, SheetHeader } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";

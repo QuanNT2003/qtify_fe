@@ -3,6 +3,7 @@ import { SkipBack, SkipForward, Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { TabsContent } from "@/components/ui/tabs";
+import Image from "next/image";
 
 interface PlayerInfoTabProps {
   title: string;
@@ -24,8 +25,14 @@ export const PlayerInfoTab = ({
       value="info"
       className="h-full m-0 data-[state=active]:flex flex-col md:flex-row items-center justify-center gap-12 overflow-y-auto"
     >
-      <div className="w-full max-w-[300px] md:max-w-[450px] aspect-square rounded-xl overflow-hidden shadow-2xl shadow-primary/20">
-        <img src={cover} alt={title} className="w-full h-full object-cover" />
+      <div className="relative w-full max-w-[300px] md:max-w-[450px] aspect-square rounded-xl overflow-hidden shadow-2xl shadow-primary/20">
+        <Image
+          src={cover}
+          alt={title}
+          fill
+          className="w-full h-full object-cover"
+          priority
+        />
       </div>
       <div className="flex flex-col items-center md:items-start text-center md:text-left gap-6 max-w-md">
         <div>
