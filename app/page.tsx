@@ -1,6 +1,6 @@
+import { AlbumCard } from "@/components/album-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Play, MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 
 const albums = [
   {
@@ -51,32 +51,12 @@ export default function Home() {
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {albums.map((album) => (
-            <div
+            <AlbumCard
               key={album.title}
-              className="group relative space-y-3 overflow-hidden rounded-md border border-border/50 bg-card p-3 transition-colors hover:bg-accent/50"
-            >
-              <div className="relative aspect-square overflow-hidden rounded-md">
-                <Image
-                  src={album.cover}
-                  alt={album.title}
-                  fill
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="h-12 w-12 rounded-full shadow-lg"
-                  >
-                    <Play className="h-6 w-6 fill-current" />
-                  </Button>
-                </div>
-              </div>
-              <div className="space-y-1 text-sm">
-                <h3 className="font-medium leading-none">{album.title}</h3>
-                <p className="text-xs text-muted-foreground">{album.artist}</p>
-              </div>
-            </div>
+              title={album.title}
+              artist={album.artist}
+              cover={album.cover}
+            />
           ))}
         </div>
       </section>
