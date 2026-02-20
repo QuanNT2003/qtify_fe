@@ -2,13 +2,21 @@ import Image from "next/image";
 import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import Link from "next/link";
+
 interface AlbumCardProps {
   title: string;
   artist: string;
   cover: string;
+  artistId?: string;
 }
 
-export function AlbumCard({ title, artist, cover }: AlbumCardProps) {
+export function AlbumCard({
+  title,
+  artist,
+  cover,
+  artistId = "1",
+}: AlbumCardProps) {
   return (
     <div className="group relative space-y-3 overflow-hidden rounded-md border border-border/50 bg-card p-3 transition-colors hover:bg-accent/50">
       <div className="relative aspect-square overflow-hidden rounded-md">
@@ -30,7 +38,12 @@ export function AlbumCard({ title, artist, cover }: AlbumCardProps) {
       </div>
       <div className="space-y-1 text-sm">
         <h3 className="font-medium leading-none">{title}</h3>
-        <p className="text-xs text-muted-foreground">{artist}</p>
+        <Link
+          href={`/artist/${artistId}`}
+          className="text-xs text-muted-foreground hover:text-primary transition-colors hover:underline"
+        >
+          {artist}
+        </Link>
       </div>
     </div>
   );

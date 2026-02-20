@@ -6,7 +6,7 @@ interface CategoryCardProps {
 export function CategoryCard({ title, color }: CategoryCardProps) {
   return (
     <div
-      className={`relative aspect-[3/2] overflow-hidden rounded-lg p-4 transition-transform hover:scale-[1.02] cursor-pointer`}
+      className={`relative aspect-3/2 overflow-hidden rounded-lg p-4 transition-transform hover:scale-[1.02] cursor-pointer`}
       style={{ backgroundColor: color }}
     >
       <span className="text-xl font-bold text-white tracking-tight">
