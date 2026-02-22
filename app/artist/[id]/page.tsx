@@ -4,11 +4,7 @@ import { Play, MoreHorizontal, BadgeCheck } from "lucide-react";
 import Image from "next/image";
 import { SongListItem } from "@/components/song-list-item";
 
-export default function ArtistDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function ArtistDetailPage() {
   // ... (previous logic for artist, popularSongs, albums stays same)
   const artist = {
     name: "Sơn Tùng M-TP",
@@ -20,26 +16,26 @@ export default function ArtistDetailPage({
   };
 
   const popularSongs = [
-    { title: "Making My Way", plays: "45,000,000", duration: "3:45", id: "1" },
+    { title: "Making My Way", artist: artist.name, duration: "3:45", id: "1" },
     {
       title: "Chúng Ta Của Hiện Tại",
-      plays: "120,000,000",
+      artist: artist.name,
       duration: "5:01",
       id: "2",
     },
     {
       title: "Muộn Rồi Mà Sao Còn",
-      plays: "98,000,000",
+      artist: artist.name,
       duration: "4:35",
       id: "3",
     },
     {
       title: "Có Chắc Yêu Là Đây",
-      plays: "85,000,000",
+      artist: artist.name,
       duration: "3:22",
       id: "4",
     },
-    { title: "Lạc Trôi", plays: "150,000,000", duration: "3:52", id: "5" },
+    { title: "Lạc Trôi", artist: artist.name, duration: "3:52", id: "5" },
   ];
 
   const albums = [
@@ -127,7 +123,7 @@ export default function ArtistDetailPage({
                   key={song.id}
                   index={index}
                   title={song.title}
-                  plays={song.plays}
+                  artist={song.artist}
                   duration={song.duration}
                 />
               ))}

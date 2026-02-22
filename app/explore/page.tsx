@@ -1,7 +1,5 @@
 import { AlbumCard } from "@/components/album-card";
 import { CategoryCard } from "@/components/category-card";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 
 const categories = [
   { title: "Pop", color: "#E13300" },
@@ -32,14 +30,6 @@ const featuredAlbums = [
 export default function ExplorePage() {
   return (
     <div className="space-y-8 pb-8">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="What do you want to listen to?"
-          className="h-12 w-full max-w-md pl-10 bg-muted/50 border-none focus-visible:ring-primary"
-        />
-      </div>
-
       <section>
         <h2 className="text-2xl font-bold tracking-tight mb-4">Browse All</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">

@@ -3,14 +3,14 @@ import { Play, Heart } from "lucide-react";
 interface SongListItemProps {
   index: number;
   title: string;
-  plays: string;
+  artist: string;
   duration: string;
 }
 
 export function SongListItem({
   index,
   title,
-  plays,
+  artist,
   duration,
 }: SongListItemProps) {
   return (
@@ -25,7 +25,7 @@ export function SongListItem({
         </div>
         <div>
           <h3 className="text-sm font-medium leading-none">{title}</h3>
-          <p className="text-xs text-muted-foreground">{plays} plays</p>
+          <p className="text-xs text-muted-foreground">{artist}</p>
         </div>
       </div>
       <div className="flex items-center space-x-6">
