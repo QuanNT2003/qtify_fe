@@ -16,7 +16,29 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 export default function Header() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchValue, setSearchValue] = React.useState(
+    searchParams.get("q") || "",
+  );
+
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (searchValue) {
+        router.push(`/search?q=${encodeURIComponent(searchValue)}`);
+      } else {
+        router.push("/explore");
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur-md">
       <div className="flex items-center gap-4">
@@ -27,6 +49,9 @@ export default function Header() {
             type="search"
             placeholder="Search songs, artists, albums..."
             className="w-full bg-muted/50 pl-9 focus-visible:ring-primary"
+            value={searchValue}
+            onChange={(e) => handleSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>
