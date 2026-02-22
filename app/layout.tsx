@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/header";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +18,6 @@ export const metadata: Metadata = {
     "A premium music streaming experience built with Next.js and Shadcn UI",
 };
 
-import MusicPlayer from "@/components/music-player";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,18 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <SidebarProvider>
-          <div className="flex h-screen w-full overflow-hidden select-none">
-            <AppSidebar />
-            <SidebarInset className="flex flex-col h-full overflow-hidden bg-background">
-              <Header />
-              <main className="flex-1 overflow-y-auto p-6 pb-24">
-                {children}
-              </main>
-            </SidebarInset>
-          </div>
-        </SidebarProvider>
-        <MusicPlayer />
+        {children}
       </body>
     </html>
   );
