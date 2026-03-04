@@ -1,16 +1,8 @@
 import { AlbumCard } from "@/components/album-card";
 import { CategoryCard } from "@/components/category-card";
-
-const categories = [
-  { title: "Pop", color: "#E13300" },
-  { title: "Hip-Hop", color: "#BC5900" },
-  { title: "Dance", color: "#D84000" },
-  { title: "Indie", color: "#E91429" },
-  { title: "Chill", color: "#777777" },
-  { title: "Rock", color: "#E8115B" },
-  { title: "K-Pop", color: "#148A08" },
-  { title: "Jazz", color: "#7D4B32" },
-];
+import { genreService } from "@/lib/api/services/genre.service";
+import { getGenreColor } from "@/lib/utils";
+import { Genre } from "@/lib/api/types";
 
 const featuredAlbums = [
   {
@@ -27,19 +19,33 @@ const featuredAlbums = [
   },
 ];
 
-export default function ExplorePage() {
+export default async function ExplorePage() {
+  let genres: Genre[] = [];
+  try {
+    const response = await genreService.getGenres({ per_page: 20 });
+    genres = response.data;
+  } catch (error) {
+    console.error("Failed to fetch genres:", error);
+  }
+
   return (
     <div className="space-y-8 pb-8">
       <section>
         <h2 className="text-2xl font-bold tracking-tight mb-4">Browse All</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.title}
-              title={category.title}
-              color={category.color}
-            />
-          ))}
+          {genres.length > 0 ? (
+            genres.map((genre) => (
+              <CategoryCard
+                key={genre.id}
+                title={genre.name}
+                color={getGenreColor(genre.name)}
+              />
+            ))
+          ) : (
+            <div className="col-span-full py-10 text-center text-muted-foreground">
+              No categories available or failed to load.
+            </div>
+          )}
         </div>
       </section>
 
