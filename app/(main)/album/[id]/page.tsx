@@ -32,7 +32,7 @@ export default async function AlbumDetailPage({
   let moreAlbums: Album[] = [];
   try {
     const moreAlbumsResponse = await albumService.getAlbums({
-      artist_id: album.artist_id,
+      artist_ids: album.artist_id,
       per_page: 5,
     });
     moreAlbums = moreAlbumsResponse.data.filter((a) => a.id !== id).slice(0, 4);

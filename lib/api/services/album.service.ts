@@ -10,7 +10,14 @@ export const albumService = {
     if (params.per_page)
       queryParams.append("per_page", params.per_page.toString());
     if (params.title) queryParams.append("title", params.title);
-    if (params.artist_id) queryParams.append("artist_id", params.artist_id);
+    if (params.artist_ids) {
+      queryParams.append(
+        "artist_ids",
+        Array.isArray(params.artist_ids)
+          ? params.artist_ids.join(",")
+          : params.artist_ids,
+      );
+    }
 
     const queryString = queryParams.toString();
     const endpoint = `/album${queryString ? `?${queryString}` : ""}`;

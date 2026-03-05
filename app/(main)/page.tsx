@@ -1,23 +1,30 @@
 import { AlbumCard } from "@/components/album-card";
 import { CategoryCard } from "@/components/category-card";
+import { ArtistCard } from "@/components/artist-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Play, MoreHorizontal, ChevronRight } from "lucide-react";
 import { genreService } from "@/lib/api/services/genre.service";
 import { albumService } from "@/lib/api/services/album.service";
+import { artistService } from "@/lib/api/services/artist.service";
 import { getGenreColor } from "@/lib/utils";
-import { Album, Genre } from "@/lib/api/types";
+import { Album, Genre, Artist } from "@/lib/api/types";
 import Link from "next/link";
 
 export default async function Home() {
   let genres: Genre[] = [];
   let albums: Album[] = [];
+  let artists: Artist[] = [];
   try {
-    const [genresResponse, albumsResponse] = await Promise.all([
-      genreService.getGenres({ per_page: 4 }),
-      albumService.getAlbums({ per_page: 5 }),
-    ]);
+    const [genresResponse, albumsResponse, artistsResponse] = await Promise.all(
+      [
+        genreService.getGenres({ per_page: 4 }),
+        albumService.getAlbums({ per_page: 5 }),
+        artistService.getArtists({ per_page: 5 }),
+      ],
+    );
     genres = genresResponse.data;
     albums = albumsResponse.data;
+    artists = artistsResponse.data;
   } catch (error) {
     console.error("Failed to fetch data for home:", error);
   }
@@ -48,6 +55,32 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {artists.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Featured Artists
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Popular personalities you might like.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {artists.map((artist) => (
+              <ArtistCard
+                key={artist.id}
+                id={artist.id}
+                name={artist.name}
+                avatar_url={artist.avatar_url}
+                verified={artist.verified}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {genres.length > 0 && (
         <section>
