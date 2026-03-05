@@ -8,10 +8,11 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const url = `${BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+  const headers = new Headers(options.headers);
+
+  if (!(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
 
   const response = await fetch(url, {
     ...options,

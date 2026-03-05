@@ -29,3 +29,8 @@ export function getGenreColor(name: string) {
   const index = Math.abs(hash) % colors.length;
   return colors[index];
 }
+export function formatDuration(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}

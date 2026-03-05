@@ -3,44 +3,23 @@ import { CategoryCard } from "@/components/category-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Play, MoreHorizontal, ChevronRight } from "lucide-react";
 import { genreService } from "@/lib/api/services/genre.service";
+import { albumService } from "@/lib/api/services/album.service";
 import { getGenreColor } from "@/lib/utils";
-import { Genre } from "@/lib/api/types";
+import { Album, Genre } from "@/lib/api/types";
 import Link from "next/link";
-
-const albums = [
-  {
-    title: "V-Pop Hits",
-    artist: "Various Artists",
-    cover:
-      "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=300&h=300&fit=crop",
-  },
-  {
-    title: "Chill Lofi Study",
-    artist: "Lofi Girl",
-    cover:
-      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=300&h=300&fit=crop",
-  },
-  {
-    title: "Top 50 Global",
-    artist: "Spotify",
-    cover:
-      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop",
-  },
-  {
-    title: "Hip Hop Mix 2024",
-    artist: "Various Artists",
-    cover:
-      "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=300&h=300&fit=crop",
-  },
-];
 
 export default async function Home() {
   let genres: Genre[] = [];
+  let albums: Album[] = [];
   try {
-    const response = await genreService.getGenres({ per_page: 4 });
-    genres = response.data;
+    const [genresResponse, albumsResponse] = await Promise.all([
+      genreService.getGenres({ per_page: 4 }),
+      albumService.getAlbums({ per_page: 5 }),
+    ]);
+    genres = genresResponse.data;
+    albums = albumsResponse.data;
   } catch (error) {
-    console.error("Failed to fetch genres for home:", error);
+    console.error("Failed to fetch data for home:", error);
   }
 
   return (
@@ -59,10 +38,12 @@ export default async function Home() {
         <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {albums.map((album) => (
             <AlbumCard
-              key={album.title}
+              key={album.id}
               title={album.title}
-              artist={album.artist}
-              cover={album.cover}
+              artist={album.artist?.name || "Unknown Artist"}
+              cover={album.cover_image_url || "/placeholder-album.png"}
+              albumId={album.id}
+              artistId={album.artist_id}
             />
           ))}
         </div>
