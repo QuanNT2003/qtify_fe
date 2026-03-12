@@ -10,6 +10,14 @@ export async function apiFetch<T>(
 
   const headers = new Headers(options.headers);
 
+  // Add Auth token
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+  }
+
   if (!(options.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
@@ -29,3 +37,22 @@ export async function apiFetch<T>(
   const result: ApiResponse<T> = await response.json();
   return result.data;
 }
+
+export const baseApi = {
+  get: <T>(url: string, options?: RequestInit) =>
+    apiFetch<T>(url, { ...options, method: "GET" }),
+  post: <T>(url: string, body?: unknown, options?: RequestInit) =>
+    apiFetch<T>(url, {
+      ...options,
+      method: "POST",
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    }),
+  patch: <T>(url: string, body?: unknown, options?: RequestInit) =>
+    apiFetch<T>(url, {
+      ...options,
+      method: "PATCH",
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    }),
+  delete: <T>(url: string, options?: RequestInit) =>
+    apiFetch<T>(url, { ...options, method: "DELETE" }),
+};

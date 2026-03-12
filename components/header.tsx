@@ -17,9 +17,12 @@ import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+import Link from "next/link";
 
 export default function Header() {
   const router = useRouter();
+  const { user, logout, isAuthenticated } = useAuth();
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = React.useState(
     searchParams.get("q") || "",
@@ -61,42 +64,56 @@ export default function Header() {
           <Bell className="h-5 w-5" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
         </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src="" alt="User" />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  <User className="h-5 w-5" />
-                </AvatarFallback>
-              </Avatar>
+
+        {isAuthenticated ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={user?.avatar_url || ""} alt={user?.username || "User"} />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    <User className="h-5 w-5" />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    {user?.full_name || user?.username}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => router.push("/profile")}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive" onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link href="/login">Sign In</Link>
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Guest User</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  guest@example.com
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <Button asChild>
+              <Link href="/register">Sign Up</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

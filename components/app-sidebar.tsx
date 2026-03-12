@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
 
 import {
   Sidebar,
@@ -70,9 +71,9 @@ const data = {
     },
   ],
 };
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   return (
     <Sidebar
@@ -143,9 +144,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg">
               <User className="size-5" />
               <div className="flex flex-col gap-0.5 leading-none">
-                <span className="font-semibold">Guest User</span>
+                <span className="font-semibold">{user?.full_name || user?.username || "Guest User"}</span>
                 <span className="text-xs text-muted-foreground">
-                  Free Account
+                  {user ? user.email : "Free Account"}
                 </span>
               </div>
             </SidebarMenuButton>
