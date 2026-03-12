@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, LoginCredentials, RegisterData } from "@/lib/api/auth-types";
 import { authService } from "@/lib/api/services/auth.service";
 import { useRouter } from "next/navigation";
+import { cookies, AUTH_KEYS } from "@/lib/cookies";
 
 interface AuthContextType {
   user: User | null;
@@ -23,15 +24,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem("accessToken");
+      const token = cookies.get(AUTH_KEYS.ACCESS_TOKEN);
       if (token) {
         try {
           const profile = await authService.getProfile();
           setUser(profile);
         } catch (error) {
           console.error("Failed to fetch profile:", error);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          cookies.remove(AUTH_KEYS.ACCESS_TOKEN);
+          cookies.remove(AUTH_KEYS.REFRESH_TOKEN);
         }
       }
       setIsLoading(false);
@@ -42,10 +43,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const { accessToken, refreshToken, user: userData } = await authService.login(credentials);
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      setUser(userData);
+      const { accessToken, refreshToken } = await authService.login(credentials);
+      cookies.set(AUTH_KEYS.ACCESS_TOKEN, accessToken);
+      cookies.set(AUTH_KEYS.REFRESH_TOKEN, refreshToken);
+
+      // Fetch profile immediately after login to get user data
+      const profile = await authService.getProfile();
+      setUser(profile);
+
       router.push("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -69,8 +74,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error("Logout failed:", error);
     } finally {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      cookies.remove(AUTH_KEYS.ACCESS_TOKEN);
+      cookies.remove(AUTH_KEYS.REFRESH_TOKEN);
       setUser(null);
       router.push("/login");
     }
