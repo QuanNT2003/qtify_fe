@@ -1,7 +1,7 @@
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, Clock, ListMusic } from "lucide-react";
-import { Song } from "@/lib/api/types";
+import { Song } from "@/app/api/types";
 import { AuthGuard } from "@/components/auth-guard";
 
 export default function RecentPage() {
@@ -12,7 +12,12 @@ export default function RecentPage() {
       duration: 251,
       id: "1",
     },
-    { title: "APT.", artist: { name: "ROSE, Bruno Mars" }, duration: 170, id: "2" },
+    {
+      title: "APT.",
+      artist: { name: "ROSE, Bruno Mars" },
+      duration: 170,
+      id: "2",
+    },
     {
       title: "Beautiful Things",
       artist: { name: "Benson Boone" },

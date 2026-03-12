@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { User, LoginCredentials, RegisterData } from "@/lib/api/auth-types";
-import { authService } from "@/lib/api/services/auth.service";
+import { User, LoginCredentials, RegisterData } from "@/app/api/auth-types";
+import { authService } from "@/app/api/services/auth.service";
 import { useRouter } from "next/navigation";
 import { cookies, AUTH_KEYS } from "@/lib/cookies";
 
@@ -43,7 +43,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const { accessToken, refreshToken } = await authService.login(credentials);
+      const { accessToken, refreshToken } =
+        await authService.login(credentials);
       cookies.set(AUTH_KEYS.ACCESS_TOKEN, accessToken);
       cookies.set(AUTH_KEYS.REFRESH_TOKEN, refreshToken);
 

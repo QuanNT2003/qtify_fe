@@ -6,11 +6,10 @@ import { AlbumCard } from "@/components/album-card";
 import { ArtistCard } from "@/components/artist-card";
 import { Search, Music, Disc, User, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { songService } from "@/lib/api/services/song.service";
-import { albumService } from "@/lib/api/services/album.service";
-import { artistService } from "@/lib/api/services/artist.service";
-import { Song, Album, Artist } from "@/lib/api/types";
-
+import { songService } from "@/app/api/services/song.service";
+import { albumService } from "@/app/api/services/album.service";
+import { artistService } from "@/app/api/services/artist.service";
+import { Song, Album, Artist } from "@/app/api/types";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();

@@ -2,7 +2,7 @@ import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, MoreHorizontal, Heart, Clock, ListMusic } from "lucide-react";
 import Image from "next/image";
-import { Song } from "@/lib/api/types";
+import { Song } from "@/app/api/types";
 import { AuthGuard } from "@/components/auth-guard";
 
 export default function PlaylistDetailPage() {
@@ -41,7 +41,12 @@ export default function PlaylistDetailPage() {
       duration: 202,
       id: "4",
     },
-    { title: "Lạc Trôi", artist: { name: "Sơn Tùng M-TP" }, duration: 232, id: "5" },
+    {
+      title: "Lạc Trôi",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 232,
+      id: "5",
+    },
     {
       title: "Hãy Trao Cho Anh",
       artist: { name: "Sơn Tùng M-TP" },

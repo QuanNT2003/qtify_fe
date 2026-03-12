@@ -4,11 +4,11 @@ import { Play, MoreHorizontal, Heart, Clock } from "lucide-react";
 import Image from "next/image";
 import { SongListItem } from "@/components/song-list-item";
 import Link from "next/link";
-import { albumService } from "@/lib/api/services/album.service";
+import { albumService } from "@/app/api/services/album.service";
 import { formatDuration } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
-import { Album } from "@/lib/api/types";
+import { Album } from "@/app/api/types";
 
 export default async function AlbumDetailPage({
   params,

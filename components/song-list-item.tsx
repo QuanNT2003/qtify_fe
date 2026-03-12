@@ -2,7 +2,7 @@
 
 import { Play, Heart, Music2 } from "lucide-react";
 import { useMusic } from "@/context/music-context";
-import { Song } from "@/lib/api/types";
+import { Song } from "@/app/api/types";
 import { formatDuration } from "@/lib/utils";
 import Image from "next/image";
 

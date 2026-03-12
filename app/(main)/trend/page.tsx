@@ -1,7 +1,7 @@
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, TrendingUp, Clock } from "lucide-react";
-import { Song } from "@/lib/api/types";
+import { Song } from "@//app/api/types";
 
 export default function TrendPage() {
   // Mocking 100 songs for the trend page
@@ -119,10 +119,7 @@ export default function TrendPage() {
                   }`}
                 />
               )}
-              <SongListItem
-                index={index}
-                song={song as unknown as Song}
-              />
+              <SongListItem index={index} song={song as unknown as Song} />
             </div>
           ))}
         </div>

@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Play, MoreHorizontal, BadgeCheck } from "lucide-react";
 import Image from "next/image";
 import { SongListItem } from "@/components/song-list-item";
-import { artistService } from "@/lib/api/services/artist.service";
-import { songService } from "@/lib/api/services/song.service";
-import { albumService } from "@/lib/api/services/album.service";
+import { artistService } from "@/app/api/services/artist.service";
+import { songService } from "@/app/api/services/song.service";
+import { albumService } from "@/app/api/services/album.service";
 import { notFound } from "next/navigation";
-import { Artist, Album, Song } from "@/lib/api/types";
+import { Artist, Album, Song } from "@/app/api/types";
 
 export default async function ArtistDetailPage({
   params,
