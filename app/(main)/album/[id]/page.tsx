@@ -119,9 +119,8 @@ export default async function AlbumDetailPage({
             <SongListItem
               key={song.id}
               index={index}
-              title={song.title}
-              artist={album.artist?.name || "Unknown Artist"}
-              duration={formatDuration(song.duration)}
+              song={song}
+              artistName={album.artist?.name || "Unknown Artist"}
             />
           ))}
         </div>

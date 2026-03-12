@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { TabsContent } from "@/components/ui/tabs";
 import Image from "next/image";
+import { useMusic } from "@/context/music-context";
+
+const formatTime = (seconds: number) => {
+  if (!seconds || isNaN(seconds)) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
 
 interface PlayerInfoTabProps {
   title: string;
@@ -20,6 +28,9 @@ export const PlayerInfoTab = ({
   isPlaying,
   onPlayPause,
 }: PlayerInfoTabProps) => {
+  const { currentTime, duration, seekTo } = useMusic();
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return (
     <TabsContent
       value="info"
@@ -41,11 +52,19 @@ export const PlayerInfoTab = ({
           </h2>
           <p className="text-xl text-muted-foreground font-medium">{artist}</p>
         </div>
-        <div className="w-full space-y-4">
-          <Slider defaultValue={[33]} max={100} step={1} className="w-full" />
+        <div className="w-full space-y-2">
+          <Slider
+            value={[progress]}
+            max={100}
+            step={0.1}
+            className="w-full"
+            onValueChange={([val]) => {
+              if (duration > 0) seekTo((val / 100) * duration);
+            }}
+          />
           <div className="flex justify-between text-sm text-muted-foreground font-mono">
-            <span>1:23</span>
-            <span>3:54</span>
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
         </div>
         <div className="flex items-center gap-8">

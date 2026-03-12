@@ -1,6 +1,7 @@
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, TrendingUp, Clock } from "lucide-react";
+import { Song } from "@/lib/api/types";
 
 export default function TrendPage() {
   // Mocking 100 songs for the trend page
@@ -19,30 +20,32 @@ export default function TrendPage() {
         "Lạc Trôi",
         "Hãy Trao Cho Anh",
       ][i % 10] + (i > 9 ? ` (Remix ${Math.floor(i / 10)})` : ""),
-    artist: [
-      "Lady Gaga, Bruno Mars",
-      "ROSE, Bruno Mars",
-      "Benson Boone",
-      "Billie Eilish",
-      "Sabrina Carpenter",
-      "Kendrick Lamar",
-      "Sơn Tùng M-TP",
-      "Sơn Tùng M-TP",
-      "Sơn Tùng M-TP",
-      "Sơn Tùng M-TP",
-    ][i % 10],
-    duration: [
-      "4:11",
-      "2:50",
-      "3:00",
-      "3:30",
-      "2:52",
-      "4:34",
-      "3:45",
-      "5:01",
-      "3:52",
-      "4:05",
-    ][i % 10],
+
+    artist_id: "mock",
+    album_id: "mock",
+    duration: [251, 170, 180, 210, 172, 274, 225, 301, 232, 245][i % 10],
+    play_count: 0,
+    file_url: "",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    artist: {
+      id: "mock",
+      name: [
+        "Lady Gaga, Bruno Mars",
+        "ROSE, Bruno Mars",
+        "Benson Boone",
+        "Billie Eilish",
+        "Sabrina Carpenter",
+        "Kendrick Lamar",
+        "Sơn Tùng M-TP",
+        "Sơn Tùng M-TP",
+        "Sơn Tùng M-TP",
+        "Sơn Tùng M-TP",
+      ][i % 10],
+      verified: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
   }));
 
   return (
@@ -118,9 +121,7 @@ export default function TrendPage() {
               )}
               <SongListItem
                 index={index}
-                title={song.title}
-                artist={song.artist}
-                duration={song.duration}
+                song={song as unknown as Song}
               />
             </div>
           ))}

@@ -2,6 +2,7 @@ import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, MoreHorizontal, Heart, Clock, ListMusic } from "lucide-react";
 import Image from "next/image";
+import { Song } from "@/lib/api/types";
 
 export default function PlaylistDetailPage() {
   const playlist = {
@@ -17,33 +18,33 @@ export default function PlaylistDetailPage() {
   const songs = [
     {
       title: "Making My Way",
-      artist: "Sơn Tùng M-TP",
-      duration: "3:45",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 225,
       id: "1",
     },
     {
       title: "Chúng Ta Của Hiện Tại",
-      artist: "Sơn Tùng M-TP",
-      duration: "5:01",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 301,
       id: "2",
     },
     {
       title: "Muộn Rồi Mà Sao Còn",
-      artist: "Sơn Tùng M-TP",
-      duration: "4:35",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 275,
       id: "3",
     },
     {
       title: "Có Chắc Yêu Là Đây",
-      artist: "Sơn Tùng M-TP",
-      duration: "3:22",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 202,
       id: "4",
     },
-    { title: "Lạc Trôi", artist: "Sơn Tùng M-TP", duration: "3:52", id: "5" },
+    { title: "Lạc Trôi", artist: { name: "Sơn Tùng M-TP" }, duration: 232, id: "5" },
     {
       title: "Hãy Trao Cho Anh",
-      artist: "Sơn Tùng M-TP",
-      duration: "4:05",
+      artist: { name: "Sơn Tùng M-TP" },
+      duration: 245,
       id: "6",
     },
   ];
@@ -125,9 +126,7 @@ export default function PlaylistDetailPage() {
             <SongListItem
               key={song.id}
               index={index}
-              title={song.title}
-              artist={song.artist}
-              duration={song.duration}
+              song={song as unknown as Song}
             />
           ))}
         </div>

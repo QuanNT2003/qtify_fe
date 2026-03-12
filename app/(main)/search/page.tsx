@@ -10,7 +10,7 @@ import { songService } from "@/lib/api/services/song.service";
 import { albumService } from "@/lib/api/services/album.service";
 import { artistService } from "@/lib/api/services/artist.service";
 import { Song, Album, Artist } from "@/lib/api/types";
-import { formatDuration } from "@/lib/utils";
+
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -124,9 +124,8 @@ export default function SearchPage() {
                     <SongListItem
                       key={song.id}
                       index={index}
-                      title={song.title}
-                      artist={song.artist?.name || "Unknown"}
-                      duration={formatDuration(song.duration)}
+                      song={song}
+                      artistName={song.artist?.name || "Unknown"}
                     />
                   ))}
                 </div>

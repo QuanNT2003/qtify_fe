@@ -2,6 +2,7 @@ import React from "react";
 import { Play, Music2, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useMusic } from "@/context/music-context";
 
 interface Song {
   title: string;
@@ -18,16 +19,21 @@ interface SongItemProps {
 
 export const SongItem = ({
   song,
-  isActive,
+  isActive: propIsActive,
   index,
   variant = "tab",
   className,
 }: SongItemProps) => {
+  const { playSong, currentSong } = useMusic();
+
+  const isActive = propIsActive || currentSong?.title === song.title;
+
   if (variant === "side") {
     return (
       <div
+        onClick={() => playSong(song)}
         className={cn(
-          "flex items-center gap-3 p-2 mx-2 rounded-md hover:bg-muted/50 transition-colors group cursor-pointer",
+          "flex cursor-pointer items-center gap-3 p-2 mx-2 rounded-md hover:bg-muted/50 transition-colors group cursor-pointer",
           isActive && "bg-primary/10",
           className,
         )}
@@ -76,6 +82,7 @@ export const SongItem = ({
   // "tab" variant (expanded view)
   return (
     <div
+      onClick={() => playSong(song)}
       className={cn(
         "flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group",
         isActive && "bg-muted/30",

@@ -6,15 +6,10 @@ import { PlayerInfoTab } from "./PlayerInfoTab";
 import { PlayerLyricsTab } from "./PlayerLyricsTab";
 import { PlayerPlaylistTab } from "./PlayerPlaylistTab";
 
-interface Song {
-  title: string;
-  artist: string;
-  cover: string;
-  lyrics: string;
-}
+import { Song as GlobalSong } from "@/context/music-context";
 
 interface PlayerExpandedProps {
-  currentSong: Song;
+  currentSong: GlobalSong;
   playlist: { title: string; artist: string }[];
   isPlaying: boolean;
   onPlayPause: () => void;
@@ -57,7 +52,7 @@ export const PlayerExpanded = ({
                 isPlaying={isPlaying}
                 onPlayPause={onPlayPause}
               />
-              <PlayerLyricsTab lyrics={currentSong.lyrics} />
+              <PlayerLyricsTab lyrics={currentSong.lyrics || "Lời bài hát đang được cập nhật..."} />
               <PlayerPlaylistTab playlist={playlist} />
             </div>
           </Tabs>

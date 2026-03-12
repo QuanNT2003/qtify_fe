@@ -7,7 +7,6 @@ import { artistService } from "@/lib/api/services/artist.service";
 import { songService } from "@/lib/api/services/song.service";
 import { albumService } from "@/lib/api/services/album.service";
 import { notFound } from "next/navigation";
-import { formatDuration } from "@/lib/utils";
 import { Artist, Album, Song } from "@/lib/api/types";
 
 export default async function ArtistDetailPage({
@@ -103,9 +102,8 @@ export default async function ArtistDetailPage({
                   <SongListItem
                     key={song.id}
                     index={index}
-                    title={song.title}
-                    artist={artist.name}
-                    duration={formatDuration(song.duration)}
+                    song={song}
+                    artistName={artist.name}
                   />
                 ))
               ) : (

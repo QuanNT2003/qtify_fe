@@ -1,38 +1,39 @@
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
 import { Play, Clock, ListMusic } from "lucide-react";
+import { Song } from "@/lib/api/types";
 
 export default function RecentPage() {
   const recentSongs = [
     {
       title: "Die With A Smile",
-      artist: "Lady Gaga, Bruno Mars",
-      duration: "4:11",
+      artist: { name: "Lady Gaga, Bruno Mars" },
+      duration: 251,
       id: "1",
     },
-    { title: "APT.", artist: "ROSE, Bruno Mars", duration: "2:50", id: "2" },
+    { title: "APT.", artist: { name: "ROSE, Bruno Mars" }, duration: 170, id: "2" },
     {
       title: "Beautiful Things",
-      artist: "Benson Boone",
-      duration: "3:00",
+      artist: { name: "Benson Boone" },
+      duration: 180,
       id: "3",
     },
     {
       title: "Birds of a Feather",
-      artist: "Billie Eilish",
-      duration: "3:30",
+      artist: { name: "Billie Eilish" },
+      duration: 210,
       id: "4",
     },
     {
       title: "Espresso",
-      artist: "Sabrina Carpenter",
-      duration: "2:52",
+      artist: { name: "Sabrina Carpenter" },
+      duration: 172,
       id: "5",
     },
     {
       title: "Not Like Us",
-      artist: "Kendrick Lamar",
-      duration: "4:34",
+      artist: { name: "Kendrick Lamar" },
+      duration: 274,
       id: "6",
     },
   ];
@@ -88,9 +89,7 @@ export default function RecentPage() {
             <SongListItem
               key={song.id}
               index={index}
-              title={song.title}
-              artist={song.artist}
-              duration={song.duration}
+              song={song as unknown as Song}
             />
           ))}
         </div>
