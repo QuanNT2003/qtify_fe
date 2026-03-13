@@ -57,16 +57,16 @@ export function SongContextMenu({
   const [successId, setSuccessId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { user } = useAuth();
-  const [isLiked, setIsLiked] = useState(false);
+  // Initialize from the is_liked field returned by the backend (no extra fetch needed)
+  const [isLiked, setIsLiked] = useState(song.is_liked ?? false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 
+  // Sync if parent song prop changes (e.g. after refetch)
   useEffect(() => {
-    if (open && user && song.id) {
-       userLikeService.getUserLikedSongs(user.id).then((likes) => {
-        setIsLiked(likes.some((like) => like.song_id === song.id));
-      });
+    if (song.is_liked !== undefined) {
+      setIsLiked(song.is_liked);
     }
-  }, [open, user, song.id]);
+  }, [song.is_liked]);
 
   useEffect(() => {
     if (open) {
@@ -116,7 +116,7 @@ export function SongContextMenu({
     setIsLikeLoading(true);
     try {
       if (isLiked) {
-        await userLikeService.unlikeSong(user.id, song.id);
+        await userLikeService.unlikeMySong(song.id);
         setIsLiked(false);
         toast.success("Đã xóa khỏi thư viện");
       } else {

@@ -77,6 +77,7 @@ export interface Song {
   lyrics?: string;
   play_count: number;
   track_number?: number;
+  is_liked?: boolean;
   created_at: string;
   updated_at: string;
   artist?: Artist;

@@ -19,8 +19,8 @@ export default function LikedSongsPage() {
       const fetchLikedSongs = async () => {
         setIsLoading(true);
         try {
-          const result = await userLikeService.getUserLikedSongs(user.id);
-          // results come as UserLike objects, extract the song
+          // Use token-based endpoint — backend returns is_liked: true on each song
+          const result = await userLikeService.getMyLikedSongs();
           const likedSongs = result
             .map((item) => item.song)
             .filter((song): song is Song => !!song);

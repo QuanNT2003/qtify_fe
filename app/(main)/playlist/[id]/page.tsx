@@ -2,7 +2,14 @@
 
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
-import { Play, MoreHorizontal, Heart, Clock, ListMusic, Loader2 } from "lucide-react";
+import {
+  Play,
+  MoreHorizontal,
+  Heart,
+  Clock,
+  ListMusic,
+  Loader2,
+} from "lucide-react";
 import Image from "next/image";
 import { AuthGuard } from "@/components/auth-guard";
 import { useParams } from "next/navigation";
@@ -10,7 +17,8 @@ import { useEffect, useState } from "react";
 import { playlistService } from "@/app/api/services/playlist.service";
 import { Playlist } from "@/app/api/types";
 
-const DEFAULT_COVER = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop";
+const DEFAULT_COVER =
+  "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop";
 
 export default function PlaylistDetailPage() {
   const { id } = useParams();
@@ -51,7 +59,7 @@ export default function PlaylistDetailPage() {
     );
   }
 
-  const songs = playlist.songs?.map(ps => ps.song) || [];
+  const songs = playlist.songs?.map((ps) => ps.song) || [];
   const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
   const durationText = `${Math.floor(totalDuration / 60)} min ${totalDuration % 60} sec`;
 
@@ -130,11 +138,7 @@ export default function PlaylistDetailPage() {
           {/* Tracks */}
           <div className="space-y-1 pb-12">
             {songs.map((song, index) => (
-              <SongListItem
-                key={song.id}
-                index={index}
-                song={song}
-              />
+              <SongListItem key={song.id} index={index} song={song} />
             ))}
           </div>
         </div>

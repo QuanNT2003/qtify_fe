@@ -21,20 +21,14 @@ interface SongListItemProps {
 export function SongListItem({ index, song, artistName }: SongListItemProps) {
   const { playSong, currentSong } = useMusic();
   const { user } = useAuth();
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(song.is_liked || false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 
   useEffect(() => {
-    if (user && song.id) {
-      // Check if song is liked by user
-      userLikeService
-        .getUserLikedSongs(user.id)
-        .then((likes) => {
-          setIsLiked(likes.some((like) => like.song_id === song.id));
-        })
-        .catch((err) => console.error("Error fetching likes:", err));
+    if (song.is_liked !== undefined) {
+      setIsLiked(song.is_liked);
     }
-  }, [user, song.id]);
+  }, [song.is_liked]);
 
   const toggleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -46,7 +40,7 @@ export function SongListItem({ index, song, artistName }: SongListItemProps) {
     setIsLikeLoading(true);
     try {
       if (isLiked) {
-        await userLikeService.unlikeSong(user.id, song.id);
+        await userLikeService.unlikeMySong(song.id);
         setIsLiked(false);
         toast.success("Đã xóa khỏi thư viện");
       } else {
