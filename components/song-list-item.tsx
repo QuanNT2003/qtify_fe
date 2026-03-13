@@ -1,10 +1,11 @@
 "use client";
 
-import { Play, Heart, Music2 } from "lucide-react";
+import { Play, Heart, Music2, MoreVertical } from "lucide-react";
 import { useMusic } from "@/context/music-context";
 import { Song } from "@/app/api/types";
 import { formatDuration } from "@/lib/utils";
 import Image from "next/image";
+import { SongContextMenu } from "./song-context-menu";
 
 interface SongListItemProps {
   index: number;
@@ -75,6 +76,14 @@ export function SongListItem({ index, song, artistName }: SongListItemProps) {
       </div>
       <div className="flex items-center space-x-6">
         <Heart className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+        <SongContextMenu song={song} displayArtist={displayArtist}>
+          <button
+            onClick={(e) => e.stopPropagation()}
+            className="p-1 rounded-full hover:bg-accent text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
+          >
+            <MoreVertical className="h-4 w-4" />
+          </button>
+        </SongContextMenu>
         <span className="text-xs text-muted-foreground font-mono">
           {formatDuration(song.duration)}
         </span>

@@ -126,7 +126,6 @@ export interface Playlist {
 export interface PlaylistSong {
   playlist_id: string;
   song_id: string;
-  order_index: number;
   added_at: string;
   song: Song;
 }
@@ -142,14 +141,9 @@ export interface CreatePlaylistDto {
   is_public?: boolean;
 }
 
-export interface UpdatePlaylistDto = Partial<CreatePlaylistDto>;
+export type UpdatePlaylistDto = Partial<CreatePlaylistDto>;
 
 export interface CreatePlaylistSongDto {
   playlist_id: string;
   song_id: string;
-  order_index?: number;
-}
-
-export interface UpdateOrderDto {
-  order_index: number;
 }

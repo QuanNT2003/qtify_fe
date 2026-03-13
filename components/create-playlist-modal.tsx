@@ -15,15 +15,21 @@ import { playlistService } from "@/app/api/services/playlist.service";
 import { Loader2 } from "lucide-react";
 
 interface CreatePlaylistModalProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onSuccess?: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function CreatePlaylistModal({
   children,
   onSuccess,
+  open: externalOpen,
+  onOpenChange: setExternalOpen,
 }: CreatePlaylistModalProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = setExternalOpen !== undefined ? setExternalOpen : setInternalOpen;
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",

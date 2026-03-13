@@ -1,5 +1,5 @@
 import { apiFetch } from "../base";
-import { PlaylistSong, CreatePlaylistSongDto, UpdateOrderDto } from "../types";
+import { PlaylistSong, CreatePlaylistSongDto } from "../types";
 
 export const playlistSongService = {
   addSongToPlaylist: async (data: CreatePlaylistSongDto): Promise<PlaylistSong> => {
@@ -14,20 +14,6 @@ export const playlistSongService = {
 
   getSongsInPlaylist: async (playlistId: string): Promise<PlaylistSong[]> => {
     return apiFetch<PlaylistSong[]>(`/playlist-song/playlist/${playlistId}`);
-  },
-
-  updateSongOrder: async (
-    playlistId: string,
-    songId: string,
-    data: UpdateOrderDto,
-  ): Promise<PlaylistSong> => {
-    return apiFetch<PlaylistSong>(`/playlist-song/${playlistId}/${songId}/order`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
   },
 
   removeSongFromPlaylist: async (
