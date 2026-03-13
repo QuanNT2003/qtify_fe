@@ -2,35 +2,35 @@
 
 import { PlaylistCard } from "@/components/playlist-card";
 import { Button } from "@/components/ui/button";
-import { Plus, Heart } from "lucide-react";
+import { Plus, Heart, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { AuthGuard } from "@/components/auth-guard";
+import { useEffect, useCallback, useState } from "react";
+import { playlistService } from "@/app/api/services/playlist.service";
+import { Playlist } from "@/app/api/types";
+import { CreatePlaylistModal } from "@/components/create-playlist-modal";
 
-const playlists = [
-  {
-    id: "1",
-    title: "V-Pop Hits",
-    owner: "Guest User",
-    cover:
-      "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop",
-  },
-  {
-    id: "2",
-    title: "Chill Lofi Study",
-    owner: "Guest User",
-    cover:
-      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=600&h=600&fit=crop",
-  },
-  {
-    id: "3",
-    title: "Hip Hop Mix 2024",
-    owner: "Guest User",
-    cover:
-      "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=600&h=600&fit=crop",
-  },
-];
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop";
 
 export default function LibraryPage() {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPlaylists = useCallback(async () => {
+    try {
+      const result = await playlistService.getPlaylists();
+      setPlaylists(result.data);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPlaylists();
+  }, [fetchPlaylists]);
+
   return (
     <AuthGuard>
       <div className="flex flex-col gap-8 p-8">
@@ -41,7 +41,7 @@ export default function LibraryPage() {
               Manage your personal collection and playlists.
             </p>
           </div>
-          <Link href="/playlist/new">
+          <CreatePlaylistModal onSuccess={fetchPlaylists}>
             <Button
               size="lg"
               className="rounded-full gap-2 px-6 h-12 shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
@@ -49,7 +49,7 @@ export default function LibraryPage() {
               <Plus className="h-5 w-5" />
               <span className="font-bold">Create Playlist</span>
             </Button>
-          </Link>
+          </CreatePlaylistModal>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -74,15 +74,21 @@ export default function LibraryPage() {
           </Link>
 
           {/* User Playlists */}
-          {playlists.map((playlist) => (
-            <PlaylistCard
-              key={playlist.id}
-              id={playlist.id}
-              title={playlist.title}
-              owner={playlist.owner}
-              cover={playlist.cover}
-            />
-          ))}
+          {isLoading ? (
+            <div className="col-span-full flex justify-center py-20">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+          ) : (
+            playlists.map((playlist) => (
+              <PlaylistCard
+                key={playlist.id}
+                id={playlist.id}
+                title={playlist.title}
+                owner="You" // Simple for now
+                cover={DEFAULT_COVER}
+              />
+            ))
+          )}
         </div>
       </div>
     </AuthGuard>

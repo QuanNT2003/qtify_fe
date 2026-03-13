@@ -111,3 +111,45 @@ export interface GetSongsParams {
   genre_ids?: string | string[];
   album_ids?: string | string[];
 }
+
+export interface Playlist {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+  songs?: PlaylistSong[];
+}
+
+export interface PlaylistSong {
+  playlist_id: string;
+  song_id: string;
+  order_index: number;
+  added_at: string;
+  song: Song;
+}
+
+export interface GetPlaylistsParams {
+  page?: number;
+  per_page?: number;
+}
+
+export interface CreatePlaylistDto {
+  title: string;
+  description?: string;
+  is_public?: boolean;
+}
+
+export interface UpdatePlaylistDto = Partial<CreatePlaylistDto>;
+
+export interface CreatePlaylistSongDto {
+  playlist_id: string;
+  song_id: string;
+  order_index?: number;
+}
+
+export interface UpdateOrderDto {
+  order_index: number;
+}

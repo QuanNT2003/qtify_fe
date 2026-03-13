@@ -1,59 +1,59 @@
+"use client";
+
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
-import { Play, MoreHorizontal, Heart, Clock, ListMusic } from "lucide-react";
+import { Play, MoreHorizontal, Heart, Clock, ListMusic, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { Song } from "@/app/api/types";
 import { AuthGuard } from "@/components/auth-guard";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { playlistService } from "@/app/api/services/playlist.service";
+import { Playlist } from "@/app/api/types";
+
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop";
 
 export default function PlaylistDetailPage() {
-  const playlist = {
-    title: "V-Pop Hits",
-    owner: "Guest User",
-    description: "The best of V-Pop right now. Updated daily.",
-    songCount: "15 songs",
-    duration: "about 55 min",
-    cover:
-      "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&h=600&fit=crop",
-  };
+  const { id } = useParams();
+  const [playlist, setPlaylist] = useState<Playlist | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const songs = [
-    {
-      title: "Making My Way",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 225,
-      id: "1",
-    },
-    {
-      title: "Chúng Ta Của Hiện Tại",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 301,
-      id: "2",
-    },
-    {
-      title: "Muộn Rồi Mà Sao Còn",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 275,
-      id: "3",
-    },
-    {
-      title: "Có Chắc Yêu Là Đây",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 202,
-      id: "4",
-    },
-    {
-      title: "Lạc Trôi",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 232,
-      id: "5",
-    },
-    {
-      title: "Hãy Trao Cho Anh",
-      artist: { name: "Sơn Tùng M-TP" },
-      duration: 245,
-      id: "6",
-    },
-  ];
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchPlaylist = async () => {
+      try {
+        const data = await playlistService.getPlaylistById(id as string);
+        setPlaylist(data);
+      } catch (error) {
+        console.error("Failed to fetch playlist:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlaylist();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!playlist) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-4">
+        <h2 className="text-2xl font-bold">Playlist not found</h2>
+        <Button onClick={() => window.history.back()}>Go Back</Button>
+      </div>
+    );
+  }
+
+  const songs = playlist.songs?.map(ps => ps.song) || [];
+  const totalDuration = songs.reduce((acc, song) => acc + song.duration, 0);
+  const durationText = `${Math.floor(totalDuration / 60)} min ${totalDuration % 60} sec`;
 
   return (
     <AuthGuard>
@@ -62,7 +62,7 @@ export default function PlaylistDetailPage() {
         <div className="relative flex flex-col items-start gap-6 px-8 py-10 md:flex-row md:items-end md:gap-8 bg-linear-to-b from-primary/30 to-background/50 backdrop-blur-sm">
           <div className="relative aspect-square w-48 shrink-0 overflow-hidden rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:w-60 group">
             <Image
-              src={playlist.cover}
+              src={DEFAULT_COVER}
               alt={playlist.title}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -82,11 +82,11 @@ export default function PlaylistDetailPage() {
               {playlist.description}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-3 text-sm font-bold">
-              <span className="text-foreground">{playlist.owner}</span>
+              <span className="text-foreground">You</span>
               <span className="text-muted-foreground/30">•</span>
-              <span>{playlist.songCount}</span>
+              <span>{songs.length} songs</span>
               <span className="text-muted-foreground/30">•</span>
-              <span className="text-muted-foreground">{playlist.duration}</span>
+              <span className="text-muted-foreground">{durationText}</span>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function PlaylistDetailPage() {
               <SongListItem
                 key={song.id}
                 index={index}
-                song={song as unknown as Song}
+                song={song}
               />
             ))}
           </div>
