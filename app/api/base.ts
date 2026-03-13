@@ -1,5 +1,5 @@
 import { ApiResponse } from "./types";
-import { cookies, AUTH_KEYS } from "../cookies";
+import { cookies, AUTH_KEYS } from "@/lib/cookies";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 

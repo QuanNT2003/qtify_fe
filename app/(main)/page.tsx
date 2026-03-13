@@ -3,11 +3,11 @@ import { CategoryCard } from "@/components/category-card";
 import { ArtistCard } from "@/components/artist-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Play, MoreHorizontal, ChevronRight } from "lucide-react";
-import { genreService } from "@/lib/api/services/genre.service";
-import { albumService } from "@/lib/api/services/album.service";
-import { artistService } from "@/lib/api/services/artist.service";
+import { genreService } from "@/app/api/services/genre.service";
+import { albumService } from "@/app/api/services/album.service";
+import { artistService } from "@/app/api/services/artist.service";
 import { getGenreColor } from "@/lib/utils";
-import { Album, Genre, Artist } from "@/lib/api/types";
+import { Album, Genre, Artist } from "@/app/api/types";
 import Link from "next/link";
 
 export default async function Home() {
