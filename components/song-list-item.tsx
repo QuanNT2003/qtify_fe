@@ -6,6 +6,10 @@ import { Song } from "@/app/api/types";
 import { formatDuration } from "@/lib/utils";
 import Image from "next/image";
 import { SongContextMenu } from "./song-context-menu";
+import { useAuth } from "@/context/auth-context";
+import { userLikeService } from "@/app/api/services/user-like.service";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 interface SongListItemProps {
   index: number;
@@ -16,6 +20,47 @@ interface SongListItemProps {
 
 export function SongListItem({ index, song, artistName }: SongListItemProps) {
   const { playSong, currentSong } = useMusic();
+  const { user } = useAuth();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+
+  useEffect(() => {
+    if (user && song.id) {
+      // Check if song is liked by user
+      userLikeService
+        .getUserLikedSongs(user.id)
+        .then((likes) => {
+          setIsLiked(likes.some((like) => like.song_id === song.id));
+        })
+        .catch((err) => console.error("Error fetching likes:", err));
+    }
+  }, [user, song.id]);
+
+  const toggleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để yêu thích bài hát");
+      return;
+    }
+
+    setIsLikeLoading(true);
+    try {
+      if (isLiked) {
+        await userLikeService.unlikeSong(user.id, song.id);
+        setIsLiked(false);
+        toast.success("Đã xóa khỏi thư viện");
+      } else {
+        await userLikeService.likeSong({ user_id: user.id, song_id: song.id });
+        setIsLiked(true);
+        toast.success("Đã thêm vào thư viện");
+      }
+    } catch (error) {
+      console.error("Like error:", error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
 
   const displayArtist =
     artistName ||
@@ -75,7 +120,19 @@ export function SongListItem({ index, song, artistName }: SongListItemProps) {
         </div>
       </div>
       <div className="flex items-center space-x-6">
-        <Heart className="h-4 w-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+        <button
+          onClick={toggleLike}
+          disabled={isLikeLoading}
+          className={`transition-all hover:scale-110 active:scale-95 ${isLikeLoading ? "opacity-50" : ""}`}
+        >
+          <Heart
+            className={`h-4 w-4 transition-colors ${
+              isLiked
+                ? "text-primary fill-primary opacity-100"
+                : "text-muted-foreground opacity-0 group-hover:opacity-100"
+            }`}
+          />
+        </button>
         <SongContextMenu song={song} displayArtist={displayArtist}>
           <button
             onClick={(e) => e.stopPropagation()}

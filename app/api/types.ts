@@ -1,3 +1,5 @@
+import { User } from "./auth-types";
+
 export interface ApiResponse<T> {
   status: string;
   data: T;
@@ -145,5 +147,18 @@ export type UpdatePlaylistDto = Partial<CreatePlaylistDto>;
 
 export interface CreatePlaylistSongDto {
   playlist_id: string;
+  song_id: string;
+}
+
+export interface UserLike {
+  user_id: string;
+  song_id: string;
+  created_at: string;
+  user?: User;
+  song?: Song;
+}
+
+export interface CreateUserLikeDto {
+  user_id: string;
   song_id: string;
 }

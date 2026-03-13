@@ -1,54 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { SongListItem } from "@/components/song-list-item";
 import { Button } from "@/components/ui/button";
-import { Play, Heart, Clock } from "lucide-react";
+import { Play, Heart, Clock, Loader2, Music2 } from "lucide-react";
 import { Song } from "@/app/api/types";
 import { AuthGuard } from "@/components/auth-guard";
+import { useAuth } from "@/context/auth-context";
+import { userLikeService } from "@/app/api/services/user-like.service";
 
 export default function LikedSongsPage() {
-  const songs = [
-    {
-      title: "Die With A Smile",
-      artist: { name: "Lady Gaga, Bruno Mars" },
-      duration: 251,
-      id: "1",
-    },
-    {
-      title: "APT.",
-      artist: { name: "ROSE, Bruno Mars" },
-      duration: 170,
-      id: "2",
-    },
-    {
-      title: "Beautiful Things",
-      artist: { name: "Benson Boone" },
-      duration: 180,
-      id: "3",
-    },
-    {
-      title: "Birds of a Feather",
-      artist: { name: "Billie Eilish" },
-      duration: 210,
-      id: "4",
-    },
-    {
-      title: "Espresso",
-      artist: { name: "Sabrina Carpenter" },
-      duration: 172,
-      id: "5",
-    },
-    {
-      title: "Not Like Us",
-      artist: { name: "Kendrick Lamar" },
-      duration: 274,
-      id: "6",
-    },
-  ];
+  const { user } = useAuth();
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      const fetchLikedSongs = async () => {
+        setIsLoading(true);
+        try {
+          const result = await userLikeService.getUserLikedSongs(user.id);
+          // results come as UserLike objects, extract the song
+          const likedSongs = result
+            .map((item) => item.song)
+            .filter((song): song is Song => !!song);
+          setSongs(likedSongs);
+        } catch (error) {
+          console.error("Failed to fetch liked songs:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchLikedSongs();
+    }
+  }, [user]);
 
   return (
     <AuthGuard>
-      <div className="flex flex-col">
+      <div className="flex flex-col min-h-screen">
         {/* Hero Section */}
         <div className="relative flex flex-col items-start gap-6 px-8 py-10 md:flex-row md:items-end md:gap-8 bg-linear-to-b from-indigo-700 to-background/50 backdrop-blur-sm">
           <div className="relative aspect-square w-48 shrink-0 overflow-hidden rounded-xl shadow-[0_20px_50px_rgba(79,70,229,0.3)] md:w-60 bg-linear-to-br from-indigo-600 via-indigo-500 to-blue-400 flex items-center justify-center group">
@@ -63,9 +52,9 @@ export default function LikedSongsPage() {
               Liked Songs
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-3 text-sm font-bold text-white/90">
-              <span>Guest User</span>
+              <span>{user?.full_name || user?.username || "Người dùng"}</span>
               <span className="text-white/30">•</span>
-              <span>128 songs</span>
+              <span>{songs.length} songs</span>
             </div>
           </div>
         </div>
@@ -75,7 +64,8 @@ export default function LikedSongsPage() {
           <div className="flex items-center space-x-8">
             <Button
               size="icon"
-              className="h-16 w-16 rounded-full shadow-2xl transition-transform hover:scale-105 active:scale-95 bg-indigo-600 hover:bg-indigo-500"
+              disabled={songs.length === 0}
+              className="h-16 w-16 rounded-full shadow-2xl transition-transform hover:scale-105 active:scale-95 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
             >
               <Play className="h-8 w-8 fill-current translate-x-0.5" />
             </Button>
@@ -92,15 +82,31 @@ export default function LikedSongsPage() {
             </div>
           </div>
 
-          {/* Tracks */}
-          <div className="space-y-1 pb-12">
-            {songs.map((song, index) => (
-              <SongListItem
-                key={song.id}
-                index={index}
-                song={song as unknown as Song}
-              />
-            ))}
+          {/* Tracks Content */}
+          <div className="pb-12">
+            {isLoading ? (
+              <div className="flex h-64 items-center justify-center">
+                <Loader2 className="h-10 w-10 animate-spin text-indigo-500" />
+              </div>
+            ) : songs.length > 0 ? (
+              <div className="space-y-1">
+                {songs.map((song, index) => (
+                  <SongListItem
+                    key={song.id}
+                    index={index}
+                    song={song}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 text-muted-foreground gap-4">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+                  <Music2 className="h-8 w-8 opacity-20" />
+                </div>
+                <p className="font-bold tracking-tight">Chưa có bài hát nào được yêu thích</p>
+                <Button variant="outline" className="rounded-full font-bold">Tìm kiếm bài hát</Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

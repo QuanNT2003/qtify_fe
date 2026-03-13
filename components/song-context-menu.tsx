@@ -34,6 +34,9 @@ import { playlistService } from "@/app/api/services/playlist.service";
 import { playlistSongService } from "@/app/api/services/playlist-song.service";
 import { Song, Playlist } from "@/app/api/types";
 import { CreatePlaylistModal } from "./create-playlist-modal";
+import { useAuth } from "@/context/auth-context";
+import { userLikeService } from "@/app/api/services/user-like.service";
+import { toast } from "sonner";
 
 interface SongContextMenuProps {
   song: Song;
@@ -53,6 +56,17 @@ export function SongContextMenu({
   const [addingToId, setAddingToId] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { user } = useAuth();
+  const [isLiked, setIsLiked] = useState(false);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+
+  useEffect(() => {
+    if (open && user && song.id) {
+       userLikeService.getUserLikedSongs(user.id).then((likes) => {
+        setIsLiked(likes.some((like) => like.song_id === song.id));
+      });
+    }
+  }, [open, user, song.id]);
 
   useEffect(() => {
     if (open) {
@@ -93,6 +107,31 @@ export function SongContextMenu({
     }
   };
 
+  const toggleLike = async () => {
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để yêu thích bài hát");
+      return;
+    }
+
+    setIsLikeLoading(true);
+    try {
+      if (isLiked) {
+        await userLikeService.unlikeSong(user.id, song.id);
+        setIsLiked(false);
+        toast.success("Đã xóa khỏi thư viện");
+      } else {
+        await userLikeService.likeSong({ user_id: user.id, song_id: song.id });
+        setIsLiked(true);
+        toast.success("Đã thêm vào thư viện");
+      }
+    } catch (error) {
+      console.error("Like error:", error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau");
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
+
   return (
     <>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -123,7 +162,7 @@ export function SongContextMenu({
             <div className="min-w-0">
               <h4 className="text-[13px] font-black truncate leading-tight tracking-tight text-white">{song.title}</h4>
               <p className="text-[10px] text-muted-foreground/80 font-bold truncate mt-0.5 capitalize">{displayArtist}</p>
-              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground/60 uppercase font-black tracking-[0.1em] mt-1">
+              <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-1">
                 <div className="flex items-center gap-1">
                   <Heart className="h-2.5 w-2.5 fill-muted-foreground/40 stroke-none" />
                   <span>88K</span>
@@ -153,11 +192,18 @@ export function SongContextMenu({
 
           {/* Main Actions */}
           <div className="py-1 px-1">
-            <DropdownMenuItem className="flex items-center justify-between rounded-xl px-3 py-2.5 cursor-pointer focus:bg-[#3a3b4e]/50 group">
+            <DropdownMenuItem 
+              className="flex items-center justify-between rounded-xl px-3 py-2.5 cursor-pointer focus:bg-[#3a3b4e]/50 group"
+              onClick={toggleLike}
+              disabled={isLikeLoading}
+            >
               <div className="flex items-center gap-3">
-                <Heart className="h-4 w-4 text-primary fill-primary" />
-                <span className="text-sm font-bold opacity-90 group-hover:opacity-100 italic">Xóa khỏi thư viện</span>
+                <Heart className={`h-4 w-4 ${isLiked ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-primary transition-colors"}`} />
+                <span className={`text-sm font-bold opacity-90 group-hover:opacity-100 ${isLiked ? "italic" : ""}`}>
+                  {isLiked ? "Xóa khỏi thư viện" : "Yêu thích bài hát"}
+                </span>
               </div>
+              {isLikeLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />}
             </DropdownMenuItem>
             
             <DropdownMenuItem className="flex items-center gap-3 rounded-xl px-3 py-2.5 cursor-pointer focus:bg-[#3a3b4e]/50 group">
